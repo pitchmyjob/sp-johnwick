@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #Thirds apps
     'rest_framework',
+    'storages',
     #Own apps
     'apps.core.apps.CoreConfig',
     'apps.authentication.apps.AuthenticationConfig',
@@ -89,6 +90,8 @@ AUTH_USER_MODEL = 'authentication.User'
 
 
 REGISTER_CONFIRMATION = True
+
+
 
 
 # Password validation
@@ -140,7 +143,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
+
 
 
 # JWT Configuration
@@ -148,3 +151,21 @@ STATIC_URL = '/static/'
 JWT_AUTH = {
     'JWT_VERIFY_EXPIRATION' : False
 }
+
+
+# AWS S3 SETTINGS
+
+DEFAULT_FILE_STORAGE = 'apps.core.storages.MediaStorage'
+STATICFILES_STORAGE = 'apps.core.storages.StaticStorage'
+
+STATICFILES_LOCATION = 'static'
+MEDIAFILES_LOCATION = 'media'
+
+
+AWS_ACCESS_KEY_ID = get_env_variable('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = get_env_variable('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = 'spitchtv-bucket-f5tyhbkpjssh'
+
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+MEDIA_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
