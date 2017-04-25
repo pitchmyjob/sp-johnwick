@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, absolute_import
-
 import os
 
 from django.core.exceptions import ImproperlyConfigured
@@ -52,6 +49,7 @@ INSTALLED_APPS = [
     #Own apps
     'apps.core.apps.CoreConfig',
     'apps.authentication.apps.AuthenticationConfig',
+    'apps.relation.apps.RelationConfig',
 ]
 
 MIDDLEWARE = [
@@ -145,11 +143,11 @@ USE_TZ = True
 
 
 
-
 # JWT Configuration
 
 JWT_AUTH = {
-    'JWT_VERIFY_EXPIRATION' : False
+    'JWT_VERIFY_EXPIRATION' : False,
+    'JWT_PAYLOAD_HANDLER': 'apps.core.auth.jwt_response_payload_handler'
 }
 
 
@@ -167,5 +165,9 @@ AWS_SECRET_ACCESS_KEY = get_env_variable('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'spitchtv-bucket-f5tyhbkpjssh'
 
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
 STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
 MEDIA_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+
+
+AWS_META_DATA = {}

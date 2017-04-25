@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from apps.authentication.models import User
 
 
 class EmailOrUsernameModelBackend(object):
@@ -23,3 +24,14 @@ class EmailOrUsernameModelBackend(object):
             return get_user_model().objects.get(pk=username)
         except get_user_model().DoesNotExist:
             return None
+
+
+def jwt_response_payload_handler(user=None):
+    return {
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'photo': str(user.photo.url),
+        'fb': True if user.idsn else False
+    }

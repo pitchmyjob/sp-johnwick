@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, absolute_import
 from .base import *
 
 
@@ -9,6 +7,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS += [
     # Thirds apps
+    'django_extensions',
 ]
 
 DATABASES = {
