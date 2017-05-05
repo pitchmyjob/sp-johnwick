@@ -8,7 +8,7 @@ from .models import User
 
 
 fieldsets = list(UserAdmin.fieldsets)
-fieldsets[1][1]['fields'] = ('first_name', 'last_name', 'email', 'photo', 'type', 'idsn')
+fieldsets[1][1]['fields'] = ('first_name', 'last_name', 'email', 'photo', 'type', 'idsn', 'fcm')
 
 @admin.register(User)
 class UserAdmin(UserAdmin):

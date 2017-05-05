@@ -7,3 +7,4 @@ boto3==1.4.4
 Pillow==4.1.0
 requests==2.13.0
 -e git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
+django-extra-fields==0.9

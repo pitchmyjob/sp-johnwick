@@ -9,6 +9,7 @@ from .serializers import *
 from ..models import Follow, FacebookFriend
 from apps.authentication.models import User
 from apps.authentication.facebook import Facebook
+from apps.core.states import FollowUser
 
 
 
@@ -25,6 +26,7 @@ class FollowCreateApiView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        FollowUser(self.request.user.id).follow(serializer.data['follow'])
         # FacebookFriend.objects.filter(user=self.request.user, friend_id=serializer.data.get('follow')).update(follow=True)
 
 
@@ -32,7 +34,6 @@ class FollowCreateApiView(generics.CreateAPIView):
 class FollowAllCreateApiView(APIView):
 
     def post(self, request, format=None):
-
         ids = self.request.user.facebook_friends\
             .exclude(friend_id__in=self.request.user.follows.values_list('follow_id', flat=True))\
             .values_list('friend_id', flat=True)
@@ -41,6 +42,7 @@ class FollowAllCreateApiView(APIView):
             Follow.objects.bulk_create(
                 [Follow(user=self.request.user, follow_id=x) for x in ids]
             )
+            FollowUser(self.request.user.id).follow(list(ids))
 
         return Response(status=status.HTTP_200_OK)
 

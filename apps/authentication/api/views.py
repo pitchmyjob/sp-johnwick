@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, absolute_import
 
 import boto3
+import copy
 
 from rest_framework import generics, status, mixins
 from rest_framework.permissions import AllowAny
@@ -11,10 +12,23 @@ from rest_framework.response import Response
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 
-from .serializers import UserRsRegisterSerializer, UserEmailRegisterSerializer, FacebookTwitterLoginSerializer
+from .mixins import AuthMeMixin
+from .serializers import UserRsRegisterSerializer, UserEmailRegisterSerializer, AuthMeSerializer, AuthFCMSerializer
 from ..models import User
 from apps.relation.models import FacebookFriend
 from apps.authentication.facebook import Facebook
+
+
+class AuthFCMTokenApiView(AuthMeMixin, generics.UpdateAPIView):
+    serializer_class = AuthFCMSerializer
+
+
+class AuthMeApiView(AuthMeMixin, generics.UpdateAPIView):
+    serializer_class = AuthMeSerializer
+
+    def update(self, request, *args, **kwargs):
+        super(AuthMeApiView, self).update(request, *args, **kwargs)
+        return Response({'token' : self.request.user.get_token()}, status=status.HTTP_200_OK)
 
 
 
@@ -22,14 +36,11 @@ class AuthFacebookView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, format=None):
-
         if "token" in request.data:
             fb = Facebook(request.data['token'])
             user = get_object_or_404(User, idsn=fb.get_id())
-
             if user.type == "facebook":
                 return Response({"token": user.get_token()}, status=status.HTTP_200_OK)
-
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -38,13 +49,13 @@ class AuthRegisterApiView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 
 
+
 class AuthFacebookRegisterApiView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, format=None):
 
         if "token" in request.data and "username" in request.data:
-
             facebook = Facebook(request.data['token'])
 
             serializer = UserRsRegisterSerializer(data=facebook.get_profile(request.data['username']))
@@ -69,15 +80,12 @@ class AuthFacebookRegisterApiView(APIView):
 class AuthEmailUsernameCheckApiView(APIView):
     permission_classes = (AllowAny,)
 
-
     def post(self, request):
         print(request.data)
-
         if 'email' in request.data:
             if request.data['email']:
                 if not User.objects.filter(email=request.data['email']).exists():
                     return Response(status=status.HTTP_200_OK)
-
         if 'username' in request.data:
             if request.data['username']:
                 if not User.objects.filter(username=request.data['username']).exists():

@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^api/', include([
         url(r'^', include('apps.authentication.urls')),
         url(r'^', include('apps.relation.urls')),
+        url(r'^', include('apps.ask.urls')),
     ])),
     url(r'^admin/', admin.site.urls),
 ]

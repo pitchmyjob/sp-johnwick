@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'apps.core.apps.CoreConfig',
     'apps.authentication.apps.AuthenticationConfig',
     'apps.relation.apps.RelationConfig',
+    'apps.ask.apps.AskConfig',
 ]
 
 MIDDLEWARE = [
@@ -162,7 +163,7 @@ MEDIAFILES_LOCATION = 'media'
 
 AWS_ACCESS_KEY_ID = get_env_variable('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = get_env_variable('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = 'spitchtv-bucket-f5tyhbkpjssh'
+AWS_STORAGE_BUCKET_NAME = 'spitchdev-bucket-uwfmzpv98dvk'
 
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 

@@ -32,6 +32,6 @@ def jwt_response_payload_handler(user=None):
         'email': user.email,
         'first_name': user.first_name,
         'last_name': user.last_name,
-        'photo': str(user.photo.url),
+        'photo': str(user.photo.url), 
         'fb': True if user.idsn else False
     }

@@ -1,11 +1,46 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
-from django.core.files.base import ContentFile
+
 import requests
 
+from drf_extra_fields.fields import Base64ImageField
+from django.core.files.base import ContentFile
 from rest_framework import serializers
-from ..models import User
 
+from ..models import User
+from apps.core.states import SyncUser
+
+
+
+class AuthFCMSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['fcm']
+        extra_kwargs = {
+            'fcm': {'required': True}
+        }
+
+    def update(self, instance, validated_data):
+        if "fcm" in validated_data:
+            if instance.fcm != validated_data['fcm']:
+                SyncUser(instance.id).updateFcm(validated_data)
+        return super(AuthFCMSerializer, self).update(instance, validated_data)
+
+
+class AuthMeSerializer(serializers.ModelSerializer):
+    photo = Base64ImageField()
+
+    class Meta:
+        model = User
+        fields = ['email', 'first_name', 'last_name', 'username', 'photo']
+
+    def update(self, instance, validated_data):
+        response = super(AuthMeSerializer, self).update(instance, validated_data)
+        if validated_data:
+            if "photo" in validated_data:
+                validated_data['photo'] = str(instance.photo.url)
+            SyncUser(instance.id).updateUser(validated_data)
+        return response
 
 
 class UserRsRegisterSerializer(serializers.ModelSerializer):
@@ -42,13 +77,13 @@ class UserRsRegisterSerializer(serializers.ModelSerializer):
             filename = url[:url.find('?')] if '?' in url else url
             user.photo.save(filename, ContentFile(img.content), save=True)
 
+        SyncUser(user.id).createUser(user)
         return {'token' : user.get_token(), 'id' : user.id }
 
 
 
 
 class UserEmailRegisterSerializer(serializers.ModelSerializer):
-
     token = serializers.CharField(read_only=True)
 
     class Meta:
@@ -65,10 +100,7 @@ class UserEmailRegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
+        SyncUser(user.id).createUser(user)
         return {'token' : user.get_token()}
 
 
-
-class FacebookTwitterLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    idsn = serializers.CharField(required=True, max_length=100)
