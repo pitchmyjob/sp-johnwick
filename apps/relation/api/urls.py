@@ -9,4 +9,7 @@ urlpatterns = [
     url(r'^relation/facebook-list/$', FacebookFriendListApiView.as_view(), name='relation-facebook'),
     url(r'^relation/follow/$', FollowCreateApiView.as_view(), name='follow'),
     url(r'^relation/follow/all/$', FollowAllCreateApiView.as_view(), name='follow-all'),
+
+    url(r'^relation/(?P<pk>\d+)/follows/$', ListFollowApiView.as_view(), name='follow-list'),
+    url(r'^relation/(?P<pk>\d+)/followers/$', ListFollowerApiView.as_view(), name='follower-list'),
 ]

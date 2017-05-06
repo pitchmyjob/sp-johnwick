@@ -4,12 +4,33 @@ from __future__ import unicode_literals, absolute_import
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from rest_framework.filters import SearchFilter
 from .serializers import *
+from .mixins import ContextMixin
 from ..models import Follow, FacebookFriend
 from apps.authentication.models import User
 from apps.authentication.facebook import Facebook
 from apps.core.states import FollowUser
+
+
+
+class ListFollowApiView(ContextMixin, generics.ListAPIView):
+    serializer_class = ListFollowSerializer
+    search_fields = ('follow__username', 'follow__first_name', 'follow__last_name')
+    filter_backends = ( SearchFilter,)
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Follow.objects.filter(user=pk)
+
+
+class ListFollowerApiView(ContextMixin, generics.ListAPIView):
+    serializer_class = ListFollowerSerializer
+
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Follow.objects.filter(follow=pk)
 
 
 

@@ -19,6 +19,7 @@ class User(AbstractUser):
     fcm = models.CharField(max_length=250, null=True, blank=True) #FCM token for push notification
     type = models.CharField(default="email", max_length=10)
     idsn = models.CharField(max_length=128, null=True, db_index=True, blank=True) #ID facebook or twitter
+    title = models.CharField(max_length=250, null=True, blank=True)
 
     lang = models.CharField(default="fr", max_length=10)
     country = models.CharField(default="FR", max_length=10)

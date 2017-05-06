@@ -28,7 +28,9 @@ class EmailOrUsernameModelBackend(object):
 
 def jwt_response_payload_handler(user=None):
     return {
+        'id': user.id,
         'username': user.username,
+        'title': user.title,
         'email': user.email,
         'first_name': user.first_name,
         'last_name': user.last_name,

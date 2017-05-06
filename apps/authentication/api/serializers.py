@@ -32,7 +32,7 @@ class AuthMeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'username', 'photo']
+        fields = ['email', 'first_name', 'last_name', 'username', 'photo', 'title']
 
     def update(self, instance, validated_data):
         response = super(AuthMeSerializer, self).update(instance, validated_data)
