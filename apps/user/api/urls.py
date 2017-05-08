@@ -7,4 +7,6 @@ from .views import *
 urlpatterns = [
     url(r'^user/me/$', UserMeRetrieveApi.as_view(), name='user-me'),
     url(r'^user/(?P<pk>\d+)/$', UserRetrieveApi.as_view(), name='user'),
+
+    url(r'^user/top/spitcher$', UserTopSpitcher.as_view(), name='user-top-spitcher'),
 ]

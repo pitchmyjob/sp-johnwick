@@ -43,6 +43,11 @@ class UserSerializer(UserMeSerializer):
 
     class Meta:
         model = User
-        fields  = ("id", "username", "photo", "title", "follow", "datas", "asks", "spitchs")
+        fields  = ("id", "username", "first_name", "last_name", "photo", "title", "follow", "datas", "asks", "spitchs")
 
 
+class UserTopSpitcher(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ("id", "username", "photo")

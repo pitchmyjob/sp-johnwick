@@ -3,6 +3,7 @@ import re
 from rest_framework import serializers
 from ..models import Ask, Tag, Asktag
 from apps.core.states import AskUser
+from apps.authentication.models import User
 
 class AskCreateSerializer(serializers.ModelSerializer):
 
@@ -22,3 +23,20 @@ class AskCreateSerializer(serializers.ModelSerializer):
         AskUser(instance.user.id).ask(instance, hashtags)
 
         return instance
+
+class TrendTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('id', 'tag')
+
+
+class UserAskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "photo")
+
+class AskListSerializer(serializers.ModelSerializer):
+    user = UserAskSerializer()
+    class Meta:
+        model = Ask
+        fields = ('text', 'id', 'user', 'created')

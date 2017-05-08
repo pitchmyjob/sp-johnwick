@@ -18,3 +18,10 @@ class UserRetrieveApi(generics.RetrieveAPIView):
     def get_serializer_context(self):
         return {'request': self.request}
 
+
+
+class UserTopSpitcher(generics.ListAPIView):
+    serializer_class = UserTopSpitcher
+
+    def get_queryset(self):
+        return User.objects.order_by('-id')[:10]

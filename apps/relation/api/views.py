@@ -77,8 +77,8 @@ class GenerateListFacebook(APIView):
 
         facebook = Facebook(serializer.validated_data['token'])
 
-        self.request.user.idsn = facebook.get_id()
-        self.request.user.save()
+        # self.request.user.idsn = facebook.get_id()
+        # self.request.user.save()
 
         friends_id = facebook.get_friends()
 

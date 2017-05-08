@@ -9,6 +9,8 @@ urlpatterns = [
         url(r'^', include('apps.authentication.urls')),
         url(r'^', include('apps.relation.urls')),
         url(r'^', include('apps.ask.urls')),
+        url(r'^', include('apps.user.urls')),
+        url(r'^', include('apps.notification.urls')),
     ])),
     url(r'^admin/', admin.site.urls),
 ]

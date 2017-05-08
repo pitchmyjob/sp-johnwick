@@ -6,6 +6,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+DYNAMODB_TABLE = ''
+DYNAMODB_REGION = ''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
