@@ -22,7 +22,10 @@ class States():
         if self.user:
             input['id'] = self.user
         if self.datas:
-            input = {**input, **self.datas}
+            z = input.copy()
+            z.update(self.datas)
+            input = z
+            # input = {**input, **self.datas}
         return input
 
 
