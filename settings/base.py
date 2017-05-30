@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'apps.authentication.apps.AuthenticationConfig',
     'apps.relation.apps.RelationConfig',
     'apps.ask.apps.AskConfig',
+    'apps.spitch.apps.SpitchConfig',
 ]
 
 MIDDLEWARE = [

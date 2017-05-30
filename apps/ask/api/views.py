@@ -29,4 +29,4 @@ class SearchAskListApiView(generics.ListAPIView):
     serializer_class = AskListSerializer
 
     def get_queryset(self):
-        return Ask.objects.filter(user__followers__user = self.request.user).order_by("-created")
+        return Ask.objects.filter(user__followers__user = self.request.user).distinct().order_by("-created")[:10]

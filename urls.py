@@ -11,6 +11,7 @@ urlpatterns = [
         url(r'^', include('apps.ask.urls')),
         url(r'^', include('apps.user.urls')),
         url(r'^', include('apps.notification.urls')),
+        url(r'^', include('apps.spitch.urls')),
     ])),
     url(r'^admin/', admin.site.urls),
 ]
