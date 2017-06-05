@@ -6,8 +6,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-DYNAMODB_TABLE = ''
-DYNAMODB_REGION = ''
 
 DATABASES = {
     'default': {

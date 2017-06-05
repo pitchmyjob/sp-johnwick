@@ -3,8 +3,6 @@ from .base import *
 
 DEBUG = True
 
-DYNAMODB_TABLE = 'spitchdev-tableNotification-11K0JMI3Q8ZDF'
-DYNAMODB_REGION = 'eu-west-1'
 
 
 ALLOWED_HOSTS = ['*']
@@ -12,7 +10,10 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS += [
     # Thirds apps
     'django_extensions',
-    'corsheaders'
+    'corsheaders',
+
+    #REMOVE
+    'apps.worker.apps.WorkerConfig',
 ]
 
 MIDDLEWARE = MIDDLEWARE + [

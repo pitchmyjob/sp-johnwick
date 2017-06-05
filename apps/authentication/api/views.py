@@ -82,6 +82,10 @@ class AuthEmailUsernameCheckApiView(APIView):
 
     def post(self, request):
         print(request.data)
+
+        from apps.worker.tasks import test
+        test.delay("ok", user="15")
+
         if 'email' in request.data:
             if request.data['email']:
                 if not User.objects.filter(email=request.data['email']).exists():

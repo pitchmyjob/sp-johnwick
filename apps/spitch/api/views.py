@@ -11,19 +11,65 @@ from django.shortcuts import get_object_or_404
 from ..models import Spitch
 from apps.ask.models import Ask
 from .serializers import *
-
+from ..video import Video
 
 class NewSpitch(APIView):
     parser_classes = (FileUploadParser,)
 
+    # def post(self, request, pk, format=None):
+    #     ask = get_object_or_404(Ask, pk=pk)
+    #     file = request.data['file']
+    #     file.content_type = "video/mp4"
+    #     spitch = Spitch.objects.create(user=self.request.user, ask=ask)
+    #     spitch.spitch = file
+    #     spitch.save()
+    #     print(spitch.id)
+    #     return Response(status=status.HTTP_201_CREATED)
+
     def post(self, request, pk, format=None):
         ask = get_object_or_404(Ask, pk=pk)
         file = request.data['file']
-        file.content_type = "video/mp4"
+        # file.content_type = "video/mp4"
+
+        video = Video(file)
+
+
         spitch = Spitch.objects.create(user=self.request.user, ask=ask)
         spitch.spitch = file
         spitch.save()
+
+
+
+
+        print(spitch.id)
+        # print(intro.get_object())
+        print(spitch.spitch.url)
+        print(video.get_url())
+        #
+        # print(" ")
+        # trans = Video("test", "ok")
+        # trans.transcode()
+
+
+        return Response({"video":video.get_url()}, status=status.HTTP_201_CREATED)
+
+
+
+class InitSpitch(APIView):
+    parser_classes = (FileUploadParser,)
+
+    def post(self, request, format=None):
+        file = request.data['file']
+        print(file)
+        key = str(file.name)
+        print(key)
+        s3 = boto3.resource('s3')
+        s3.Bucket('spitchdev-bucket-uwfmzpv98dvk').put_object(Key=key, Body=file, ContentType='image/jpeg')
+
         return Response(status=status.HTTP_201_CREATED)
+
+
+
 
 
 class SpitchViewSet(viewsets.ModelViewSet):

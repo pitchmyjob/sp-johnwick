@@ -173,3 +173,15 @@ MEDIA_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 
 
 AWS_META_DATA = {}
+
+
+
+# Notification
+
+DYNAMODB_TABLE = 'spitchdev-tableNotification-11K0JMI3Q8ZDF'
+DYNAMODB_REGION = 'eu-west-1'
+
+
+# Sqs Worker
+
+SQS_WORKER = 'https://sqs.eu-west-1.amazonaws.com/074761588836/spitchdev-sqsWorker-1AIORIAUBDA2I'
