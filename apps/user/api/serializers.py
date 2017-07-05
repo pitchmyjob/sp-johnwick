@@ -57,10 +57,23 @@ class UserAskSerializer(serializers.ModelSerializer):
         fields = ("id", "text", "created")
 
 
+
+class UserSpitchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "photo")
+
 class SpitchSerializer(serializers.ModelSerializer):
     ask = UserAskSerializer()
+    user = UserSpitchSerializer()
+    likes = serializers.IntegerField(source='likes.count')
+    is_liked = serializers.SerializerMethodField()
+
+    def get_is_liked(self, obj):
+        return obj.likes.filter(user=self.context['request'].user).exists()
+
     class Meta:
         model = Spitch
-        fields = ("id", "thumb", "video", "ask")
+        fields = ("id", "thumb", "video", "ask", "user", "likes", "is_liked", "spitch")
 
 
