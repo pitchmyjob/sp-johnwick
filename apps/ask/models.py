@@ -2,7 +2,6 @@ from django.db import models
 from apps.authentication.models import User
 
 
-
 class Tag(models.Model):
     tag = models.CharField(max_length=250, blank=False, unique=True)
 
@@ -15,9 +14,14 @@ class Ask(models.Model):
     user =  models.ForeignKey(User, related_name="asks", blank=False)
     tags = models.ManyToManyField(Tag, through='Asktag')
     created = models.DateTimeField(auto_now_add=True)
+    receivers = models.ManyToManyField(User, blank=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.text
+
+    def is_private(self):
+        return self.receivers.exists()
 
 
 class Asktag(models.Model):

@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, absolute_import
-
+import os
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.conf import settings
 
 urlpatterns = [
     url(r'^api/', include([
@@ -12,12 +11,13 @@ urlpatterns = [
         url(r'^', include('apps.user.urls')),
         url(r'^', include('apps.notification.urls')),
         url(r'^', include('apps.spitch.urls')),
+        url(r'^', include('apps.feed.urls')),
     ])),
     url(r'^admin/', admin.site.urls),
 ]
 
 
-#condition
-urlpatterns += [
-    url(r'^', include('apps.worker.urls')),
-]
+if os.environ["DJANGO_SETTINGS_MODULE"] == "settings.worker" or settings.DEBUG :
+    urlpatterns += [
+        url(r'^', include('apps.worker.urls')),
+    ]

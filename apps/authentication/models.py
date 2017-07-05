@@ -30,9 +30,6 @@ class User(AbstractUser):
         verbose_name_plural = _('users')
 
 
-    def get_token(self):
-        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-        payload = jwt_payload_handler(self)
-        return jwt_encode_handler(payload)
+    def token(self):
+        return self.auth_token.key
 

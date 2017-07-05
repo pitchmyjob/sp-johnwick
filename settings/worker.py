@@ -9,4 +9,3 @@ INSTALLED_APPS += [
     #Own apps
     'apps.worker.apps.WorkerConfig',
 ]
-

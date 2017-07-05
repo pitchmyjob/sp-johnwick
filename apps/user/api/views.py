@@ -1,27 +1,57 @@
-from rest_framework import generics, status, mixins
+from rest_framework import generics, viewsets, mixins, decorators
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .serializers import *
 from apps.authentication.api.mixins import AuthMeMixin
 from apps.authentication.models import User
+from apps.spitch.models import Spitch
+from apps.ask.models import Ask
+
+from .paginations import SpitchPagination
+from apps.worker.tasks import sync_user
 
 
-class UserMeRetrieveApi(AuthMeMixin, generics.RetrieveAPIView):
+class UserMeRetrieveApi(AuthMeMixin, generics.RetrieveUpdateAPIView):
     serializer_class = UserMeSerializer
 
+    def perform_update(self, serializer):
+        super(UserMeRetrieveApi, self).perform_update(serializer)
+        sync_user.delay(self.request.user.id, "update")
 
-class UserRetrieveApi(generics.RetrieveAPIView):
-    serializer_class = UserSerializer
+
+
+class UserViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-    def get_serializer_context(self):
-        return {'request': self.request}
+    @decorators.detail_route(methods=['get'])
+    def datas(self, request, pk):
+        return Response(UserDatasSerializer(instance=self.get_object()).data)
 
 
 
-class UserTopSpitcher(generics.ListAPIView):
-    serializer_class = UserTopSpitcher
+class SpitchUserList(generics.ListAPIView):
+    serializer_class = SpitchSerializer
+    pagination_class = SpitchPagination
 
     def get_queryset(self):
-        return User.objects.order_by('-id')[:10]
+        pk = self.kwargs['pk']
+        return Spitch.objects.filter(user=pk)
+
+
+class AskUserList(generics.ListAPIView):
+    serializer_class = UserAskSerializer
+    pagination_class = SpitchPagination
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Ask.objects.filter(user=pk)
+
+
+
+# class UserTopSpitcher(generics.ListAPIView):
+#     serializer_class = UserTopSpitcher
+#
+#     def get_queryset(self):
+#         return User.objects.order_by('-id')[:10]

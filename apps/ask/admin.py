@@ -4,7 +4,7 @@ from .models import Ask, Tag, Asktag
 
 @admin.register(Ask)
 class AskAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("text", "is_private")
 
 @admin.register(Asktag)
 class AsktagAdmin(admin.ModelAdmin):

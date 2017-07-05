@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from ..models import Spitch
+from apps.authentication.models import User
+from apps.ask.models import Ask
 
 
 class InitializeSpitchSerializer(serializers.ModelSerializer):
@@ -20,8 +22,22 @@ class EndSpitchSerializer(serializers.ModelSerializer):
         }
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "photo")
+
+class AskSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Ask
+        fields = ("id", "text", "user")
+
+
 class SpitchSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    ask = AskSerializer()
 
     class Meta:
         model = Spitch
-        fields = ("id", "user", "ask", "clip_uploaded", "clip_total", "created")
+        fields = ("id", "user", "ask", "video", "spitch", "created")

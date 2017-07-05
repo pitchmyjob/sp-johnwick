@@ -8,8 +8,40 @@ from django.core.files.base import ContentFile
 from rest_framework import serializers
 
 from ..models import User
-from apps.core.states import SyncUser
+from apps.worker.tasks import sync_user
 
+
+
+# Refactor ---------------------------------------------------------------
+# Refactor ---------------------------------------------------------------
+
+class FacebookRegisterSerializer(serializers.ModelSerializer):
+    photo = serializers.CharField(required=False, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'username', 'photo', 'idsn']
+        extra_kwargs = {
+            'first_name': {'required': False, 'write_only': True},
+            'last_name': {'required': False, 'write_only': True},
+            'username': {'write_only': True},
+            'email': {'write_only': True},
+            'idsn': {'write_only': True, 'required':True},
+        }
+
+    def create(self, validated_data):
+        url = validated_data.get('photo')
+        del validated_data['photo']
+        user = User.objects.create_user(type="facebook", **validated_data)
+
+        img = requests.get(url)
+
+        if img.status_code == 200:
+            url = url.split('/')[-1]
+            filename = url[:url.find('?')] if '?' in url else url
+            user.photo.save(filename, ContentFile(img.content), save=True)
+
+        return user
 
 
 class AuthFCMSerializer(serializers.ModelSerializer):
@@ -18,13 +50,13 @@ class AuthFCMSerializer(serializers.ModelSerializer):
         fields = ['fcm']
         extra_kwargs = {
             'fcm': {'required': True}
-        }
+            }
 
-    def update(self, instance, validated_data):
-        if "fcm" in validated_data:
-            if instance.fcm != validated_data['fcm']:
-                SyncUser(instance.id).updateFcm(validated_data)
-        return super(AuthFCMSerializer, self).update(instance, validated_data)
+# Refactor ---------------------------------------------------------------
+# Refactor ---------------------------------------------------------------
+
+
+
 
 
 class AuthMeSerializer(serializers.ModelSerializer):
@@ -34,13 +66,6 @@ class AuthMeSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email', 'first_name', 'last_name', 'username', 'photo', 'title']
 
-    def update(self, instance, validated_data):
-        response = super(AuthMeSerializer, self).update(instance, validated_data)
-        if validated_data:
-            if "photo" in validated_data:
-                validated_data['photo'] = str(instance.photo.url)
-            SyncUser(instance.id).updateUser(validated_data)
-        return response
 
 
 class UserRsRegisterSerializer(serializers.ModelSerializer):
@@ -77,7 +102,6 @@ class UserRsRegisterSerializer(serializers.ModelSerializer):
             filename = url[:url.find('?')] if '?' in url else url
             user.photo.save(filename, ContentFile(img.content), save=True)
 
-        SyncUser(user.id).createUser(user)
         return {'token' : user.get_token(), 'id' : user.id }
 
 
@@ -100,7 +124,7 @@ class UserEmailRegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
-        SyncUser(user.id).createUser(user)
+        sync_user.delay(user.id, "create")
         return {'token' : user.get_token()}
 
 

@@ -4,5 +4,5 @@ from .models import Spitch
 
 @admin.register(Spitch)
 class SpitchAdmin(admin.ModelAdmin):
-    list_display = ('user', 'ask', 'active')
+    list_display = ('user', 'ask', 'active', 'created')
 

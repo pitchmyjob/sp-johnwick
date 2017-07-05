@@ -1,5 +1,5 @@
 import os
-
+import raven
 from django.core.exceptions import ImproperlyConfigured
 
 
@@ -45,13 +45,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #Thirds apps
     'rest_framework',
+    'rest_framework.authtoken',
     'storages',
+    'raven.contrib.django.raven_compat',
     #Own apps
     'apps.core.apps.CoreConfig',
     'apps.authentication.apps.AuthenticationConfig',
     'apps.relation.apps.RelationConfig',
     'apps.ask.apps.AskConfig',
     'apps.spitch.apps.SpitchConfig',
+    'apps.feed.apps.FeedConfig',
 ]
 
 MIDDLEWARE = [
@@ -115,15 +118,14 @@ AUTH_PASSWORD_VALIDATORS = [
 #Django rest framework
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
 }
+
 
 
 # Internationalization
@@ -145,12 +147,6 @@ USE_TZ = True
 
 
 
-# JWT Configuration
-
-JWT_AUTH = {
-    'JWT_VERIFY_EXPIRATION' : False,
-    'JWT_PAYLOAD_HANDLER': 'apps.core.auth.jwt_response_payload_handler'
-}
 
 
 # AWS S3 SETTINGS
@@ -185,3 +181,19 @@ DYNAMODB_REGION = 'eu-west-1'
 # Sqs Worker
 
 SQS_WORKER = 'https://sqs.eu-west-1.amazonaws.com/074761588836/spitchdev-sqsWorker-1AIORIAUBDA2I'
+
+
+# ElasticSearch
+
+NAME_ES_DOMAIN = 'http://163.172.28.221:9200'
+
+
+
+#Sentry
+
+RAVEN_CONFIG = {
+    'dsn': 'https://d88fb032d9844bc0a75e2d5bfaf24407:b0366a7b0e2e409881a3db7f9928f9ff@sentry.io/184536',
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+}
