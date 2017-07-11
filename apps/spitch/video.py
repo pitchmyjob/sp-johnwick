@@ -10,7 +10,77 @@ from moviepy.editor import *
 from django.conf import settings
 
 
+#v0.1
+class Video(object):
+    def __init__(self, file, user, id, ask, color=1):
+        self.s3 = boto3.client('s3')
+        self.user = user
+        self.id = id
+        self.ask = ask
+        self.color = color
+        self.file_path = "/tmp/{}.mp4".format(str(uuid.uuid4()))
+        self.thumbnail_path = "/tmp/{}.jpg".format(str(uuid.uuid4()))
+        self.color_path = "/tmp/{}.jpg".format(str(uuid.uuid4()))
 
+        with open(self.file_path, 'wb') as open_file:
+            open_file.write(file.file.read())
+
+        self.perform_thumbnail()
+        self.perform_save_thumbnail()
+
+        self.set_foreground()
+        self.set_background_for_thumb_color()
+        self.perform_save_color_thumbnail()
+
+        self.perform_delete()
+
+
+    def set_foreground(self):
+        self.foreground = Image.open(self.thumbnail_path)
+
+    def set_background_for_thumb_color(self):
+        background = "apps/spitch/theme/{}-{}.png".format(self.color, 800)
+        self.background = Image.open(background)
+
+    def perform_thumbnail(self):
+        clip = VideoFileClip(self.file_path)
+        self.set_size(clip.w, clip.h)
+        clip= clip.resize( (self.width,self.height) )
+        clip.save_frame(self.thumbnail_path, t=0.00)
+
+
+    def perform_save_thumbnail(self):
+        self.thumb_key = "{}/spitch/{}/thumb/{}.jpg".format(self.user, self.id, self.get_uid())
+        file = open(self.thumbnail_path, 'rb')
+        key = settings.MEDIAFILES_LOCATION+"/"+self.thumb_key
+        self.s3.put_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=key, Body=file, ContentType='image/jpeg')
+
+    def perform_save_color_thumbnail(self):
+        self.foreground.paste(self.background, (0, 0), self.background)
+        self.foreground.save(self.color_path, "JPEG")
+
+        self.color_key = "{}/spitch/{}/thumb/{}.jpg".format(self.user, self.id, self.get_uid())
+        file = open(self.color_path, 'rb')
+        key = settings.MEDIAFILES_LOCATION+"/"+self.color_key
+        self.s3.put_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=key, Body=file, ContentType='image/jpeg')
+
+    def perform_delete(self):
+        os.remove(self.thumbnail_path)
+        os.remove(self.file_path)
+        os.remove(self.color_path)
+
+    def get_uid(self):
+        return str(uuid.uuid4()).replace("-", "")[:20]
+
+    def set_size(self, w, h):
+        self.width = h if w > h else w
+        self.height = w if w > h else h
+
+
+
+
+
+#Class with fade effect
 class Video2(object):
     def __init__(self, file, user, id, ask, color=1):
         self.s3 = boto3.client('s3')
@@ -144,10 +214,8 @@ class Video2(object):
 
 
 
-
-
-
-class Video(object):
+#first whitouht effect
+class Video3(object):
     def __init__(self, file, user, id, ask, color=1):
         self.s3 = boto3.client('s3')
         self.user = user

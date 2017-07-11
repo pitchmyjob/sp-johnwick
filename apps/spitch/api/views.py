@@ -37,9 +37,33 @@ class NewSpitch(APIView):
     def post(self, request, pk, format=None):
         ask = get_object_or_404(Ask, pk=pk)
         file = request.data['file']
-        # file.content_type = "video/mp4"
+        file.content_type = "video/mp4"
         spitch = Spitch.objects.create(user=self.request.user, ask=ask, color=1)
         video = Video(file, self.request.user.id, spitch.id, ask.text, spitch.color)
+        spitch.spitch = file
+        spitch.photo.name = video.thumb_key
+        spitch.thumb.name = video.color_key
+        spitch.active = True
+        spitch.save()
+        new_spitch.delay(spitch.id)
+        return Response({"thumb":spitch.thumb.url}, status=status.HTTP_201_CREATED)
+
+
+
+
+
+
+
+#Plus tard ----------------------------------------------
+class NewSpitchV2(APIView):
+    parser_classes = (FileUploadParser,)
+
+    def post(self, request, pk, format=None):
+        ask = get_object_or_404(Ask, pk=pk)
+        file = request.data['file']
+        # file.content_type = "video/mp4"
+        spitch = Spitch.objects.create(user=self.request.user, ask=ask, color=1)
+        video = VideoThumb(file, self.request.user.id, spitch.id, ask.text, spitch.color)
         spitch.spitch = file
         spitch.video.name = video.video_key
         spitch.photo.name = video.thumb_key
