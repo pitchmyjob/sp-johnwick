@@ -46,7 +46,7 @@ class Video(object):
         clip = VideoFileClip(self.file_path)
         self.set_size(clip.w, clip.h)
         # clip= clip.resize( (self.width,self.height) )
-        clip = clip.rotation(90)
+        clip = clip.rotate(90)
         clip.save_frame(self.thumbnail_path, t=0.00)
 
 
