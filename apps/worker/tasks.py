@@ -1,3 +1,5 @@
+import boto3
+import uuid
 from .shared_task import shared_task
 from apps.core.sync import SyncAsk, SyncUser
 from apps.notification.utils import NotificationHandler
@@ -44,14 +46,51 @@ def sync_user(user, action):
 
 
 @shared_task
+def like_spitch(emitter, spitch):
+    spitch = Spitch.objects.get(id=spitch)
+    emitter = User.objects.get(id=emitter)
+    NotificationHandler(emitter=emitter, type_name="like_spitch", object=spitch).send()
+
+
+
+
+@shared_task
 def new_spitch(spitch):
     spitch = Spitch.objects.get(id=spitch)
+
+    client = boto3.client('elastictranscoder')
+
+    prefix = "{}/spitch/{}/".format(spitch.user.id, spitch.id)
+    key = "{}.mp4".format(str(uuid.uuid4()).replace("-", "")[:20])
+
+    response = client.create_job(
+        PipelineId='1494509224511-truz2h',
+        Input=
+        {
+            'Key': 'media/'+str(spitch.spitch),
+            'FrameRate': 'auto',
+            'Resolution': 'auto',
+            'AspectRatio': 'auto',
+            'Interlaced': 'auto',
+            'Container': 'auto'
+        },
+        Output={
+            'Key': key,
+            'Rotate': 'auto',
+            'PresetId': '1499783813929-4mi8vh'
+        },
+        OutputKeyPrefix='media/'+prefix
+    )
+
+    spitch.spitch_transcoded.name = prefix+key
+    spitch.save()
 
     Feed.objects.bulk_create(
         [Feed(user=f.user, feed_type=1, content_object=spitch)
             for f in spitch.user.followers.all()]
     )
 
+    # No --------------------------------------
     # if not spitch.ask.is_private():
     #     receivers = spitch.ask.user.followers.exclude(
     #         user_id__in=Feed.objects.filter(feed_type=2, object_id=spitch.ask.id).values_list('user_id', flat=True)
@@ -60,12 +99,6 @@ def new_spitch(spitch):
     #         [Feed(user=f.user, feed_type=2, content_object=spitch.ask)
     #          for f in receivers]
     #     )
+    # ------------
 
     NotificationHandler(emitter=spitch.user, type_name="new_spitch", object=spitch).send()
-
-
-@shared_task
-def like_spitch(emitter, spitch):
-    spitch = Spitch.objects.get(id=spitch)
-    emitter = User.objects.get(id=emitter)
-    NotificationHandler(emitter=emitter, type_name="like_spitch", object=spitch).send()

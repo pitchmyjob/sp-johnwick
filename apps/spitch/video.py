@@ -80,6 +80,7 @@ class Video(object):
 
 
 
+
 #Class with fade effect
 class Video2(object):
     def __init__(self, file, user, id, ask, color=1):

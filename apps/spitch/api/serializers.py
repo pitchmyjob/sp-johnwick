@@ -4,23 +4,6 @@ from apps.authentication.models import User
 from apps.ask.models import Ask
 
 
-class InitializeSpitchSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Spitch
-        read_only = ("id", )
-        fields = ("id", "ask")
-
-
-class EndSpitchSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Spitch
-        fields = ("clip_total",)
-        extra_kwargs = {
-            'clip_total': {'required': True}
-        }
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,7 +20,12 @@ class AskSerializer(serializers.ModelSerializer):
 class SpitchSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     ask = AskSerializer()
+    likes = serializers.IntegerField(source='likes.count')
+    is_liked = serializers.SerializerMethodField()
+
+    def get_is_liked(self, obj):
+        return obj.likes.filter(user=self.context['request'].user).exists()
 
     class Meta:
         model = Spitch
-        fields = ("id", "user", "ask", "video", "spitch", "created")
+        fields = ("id", "user", "ask", "thumb", "spitch", "spitch_transcoded", "created", "likes", "is_liked")

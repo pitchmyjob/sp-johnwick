@@ -40,7 +40,7 @@ class ContentSpitchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Spitch
-        fields = ("id", "spitch", "thumb", "created", "ask", "user", "likes", "is_liked")
+        fields = ("id", "spitch", "thumb", "created", "ask", "user", "likes", "is_liked", "spitch_transcoded")
 
 class ContentAskSerializer(serializers.ModelSerializer):
     spitchs = serializers.SerializerMethodField()
