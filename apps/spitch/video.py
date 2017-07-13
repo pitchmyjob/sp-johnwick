@@ -45,7 +45,7 @@ class Video(object):
     def perform_thumbnail(self):
         clip = VideoFileClip(self.file_path)
         self.set_size(clip.w, clip.h)
-        clip= clip.resize( (self.width,self.height) )
+        # clip= clip.resize( (self.width,self.height) )
         clip.save_frame(self.thumbnail_path, t=0.00)
 
 
