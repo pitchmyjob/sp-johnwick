@@ -16,6 +16,12 @@ def follow_user(emitter, follow):
     follow = User.objects.get(id=follow)
     NotificationHandler(emitter=emitter, type_name="follow_user", object=follow).send()
 
+    spitchs = Spitch.objects.filter(user=follow, active=True).order_by('-created')[0:20]
+    Feed.objects.bulk_create(
+        [Feed(user=emitter, feed_type=1, content_object=spitch)
+         for spitch in reversed(spitchs)]
+    )
+
 @shared_task
 def follow_all(emitter):
     user = User.objects.get(id=emitter)
@@ -28,6 +34,12 @@ def follow_all(emitter):
             [Follow(user=user, follow_id=x) for x in ids]
         )
         NotificationHandler(emitter=user, type_name="follow_all", object=ids).send()
+
+        spitchs = Spitch.objects.filter(user__id__in=list(ids), active=True).order_by('created')
+        Feed.objects.bulk_create(
+            [Feed(user=user, feed_type=1, content_object=spitch)
+             for spitch in spitchs]
+        )
 
 @shared_task
 def ask(ask):
