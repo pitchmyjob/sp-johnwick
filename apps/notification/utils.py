@@ -80,7 +80,7 @@ class NotificationHandler(object):
         if type == 1:
             return str(self.emitter.id)+"f"
         if type == 2:
-            return str(self.emitter.id)+"l"
+            return str(self.object.id)+"l"
         if type in (3, 4):
             return str(self.object.id)+"q"
         if type in (5, 6):
