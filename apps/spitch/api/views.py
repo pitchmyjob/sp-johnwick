@@ -8,12 +8,23 @@ from apps.spitch.models import Spitch, Like
 from apps.ask.models import Ask
 from apps.worker.tasks import new_spitch, like_spitch
 from .serializers import *
+from .paginations import SpitchSwipePagination
 from ..video import Video
 
 
 class RetrieveSpitch(generics.RetrieveAPIView):
     queryset = Spitch.objects.all()
     serializer_class = SpitchSerializer
+
+
+
+class ListSwipeSpitch(generics.ListAPIView):
+    serializer_class = SpitchSerializer
+    pagination_class = SpitchSwipePagination
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Spitch.objects.filter(ask=pk, active=True)
 
 
 class LikeSpitch(APIView):

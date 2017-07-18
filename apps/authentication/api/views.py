@@ -4,23 +4,15 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
-from django.conf import settings
 from django.shortcuts import get_object_or_404
 
 from .mixins import AuthMeMixin
-from .serializers import UserRsRegisterSerializer, UserEmailRegisterSerializer, AuthMeSerializer, AuthFCMSerializer
 from ..models import User
 from apps.relation.models import FacebookFriend
 from apps.authentication.facebook import Facebook
 from apps.worker.tasks import sync_user
-
-
-# Refactor ---------------------------------------------------------------
-# Refactor ---------------------------------------------------------------
-
 from apps.user.api.serializers import UserMeSerializer
-from .serializers import FacebookRegisterSerializer
+from .serializers import FacebookRegisterSerializer, AuthFCMSerializer
 
 
 class AuthFacebookView(APIView):

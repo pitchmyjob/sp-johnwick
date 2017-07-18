@@ -27,7 +27,7 @@ class Spitch(models.Model):
     photo = ImageField(null=True)
     thumb = ImageField(null=True)
 
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=False, db_index=True)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

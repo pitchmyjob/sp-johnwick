@@ -29,19 +29,15 @@ class AskCreateSerializer(serializers.ModelSerializer):
         return instance
 
 
-class TrendTagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = ('id', 'tag')
-
-
 class UserAskSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "username", "photo")
 
+
 class AskListSerializer(serializers.ModelSerializer):
     user = UserAskSerializer()
+    spitchs = serializers.IntegerField(source='spitchs.count')
     class Meta:
         model = Ask
-        fields = ('text', 'id', 'user', 'created')
+        fields = ('text', 'id', 'user', 'created', 'spitchs')
