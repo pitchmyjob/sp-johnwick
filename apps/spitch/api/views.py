@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
+from django.db.models import Count
 
 from apps.spitch.models import Spitch, Like
 from apps.ask.models import Ask
@@ -24,7 +25,7 @@ class ListSwipeSpitch(generics.ListAPIView):
 
     def get_queryset(self):
         pk = self.kwargs['pk']
-        return Spitch.objects.filter(ask=pk, active=True)
+        return Spitch.objects.filter(ask=pk, active=True).annotate(count_likes=Count('likes')).order_by('-count_likes', '-created')
 
 
 class LikeSpitch(APIView):
