@@ -111,6 +111,6 @@ def new_spitch(spitch):
     #         [Feed(user=f.user, feed_type=2, content_object=spitch.ask)
     #          for f in receivers]
     #     )
-    # ------------
+    # ----------------------------------------
 
     NotificationHandler(emitter=spitch.user, type_name="new_spitch", object=spitch).send()
