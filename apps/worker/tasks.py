@@ -89,7 +89,7 @@ def new_spitch(spitch):
         Output={
             'Key': key,
             'Rotate': 'auto',
-            'PresetId': '1500042690507-k6tuhj'
+            'PresetId': '1500554845052-hev879'
         },
         OutputKeyPrefix='media/'+prefix
     )
