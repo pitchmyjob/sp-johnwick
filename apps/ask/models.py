@@ -15,7 +15,7 @@ class Ask(models.Model):
     tags = models.ManyToManyField(Tag, through='Asktag')
     created = models.DateTimeField(auto_now_add=True)
     receivers = models.ManyToManyField(User, blank=True)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True, db_index=True)
 
     def __str__(self):
         return self.text

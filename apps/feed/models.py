@@ -19,7 +19,7 @@ class Feed(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True, db_index=True)
     created = models.DateTimeField(auto_now_add=True)
 
 

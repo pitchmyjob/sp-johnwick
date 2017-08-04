@@ -37,7 +37,7 @@ class SpitchUserList(generics.ListAPIView):
 
     def get_queryset(self):
         pk = self.kwargs['pk']
-        return Spitch.objects.filter(user=pk)
+        return Spitch.objects.filter(user=pk, active=True)
 
 
 class AskUserList(generics.ListAPIView):
@@ -46,7 +46,7 @@ class AskUserList(generics.ListAPIView):
 
     def get_queryset(self):
         pk = self.kwargs['pk']
-        return Ask.objects.filter(user=pk)
+        return Ask.objects.filter(user=pk, active=True)
 
 
 

@@ -1,10 +1,11 @@
-from rest_framework import status, generics
+from rest_framework import status, generics, filters, viewsets, mixins, decorators
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 
+from apps.feed.models import Feed
 from apps.spitch.models import Spitch, Like
 from apps.ask.models import Ask
 from apps.worker.tasks import new_spitch, like_spitch
@@ -13,19 +14,30 @@ from .paginations import SpitchSwipePagination
 from ..video import Video
 
 
-class RetrieveSpitch(generics.RetrieveAPIView):
+class SpitchViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = Spitch.objects.all()
     serializer_class = SpitchSerializer
+
+    @decorators.detail_route(methods=['patch'])
+    def delete(self, request, pk):
+        spitch = get_object_or_404(self.queryset, pk=pk, user=request.user)
+        spitch.active = False
+        spitch.save()
+        Feed.objects.filter(object_id=spitch.id).update(active=False)
+        return Response({"active":False})
 
 
 
 class ListSwipeSpitch(generics.ListAPIView):
     serializer_class = SpitchSerializer
     pagination_class = SpitchSwipePagination
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = ('count_likes',)
+    ordering = ('-count_likes',)
 
     def get_queryset(self):
         pk = self.kwargs['pk']
-        return Spitch.objects.filter(ask=pk, active=True).annotate(count_likes=Count('likes')).order_by('-count_likes', '-created')
+        return Spitch.objects.filter(ask=pk, active=True).annotate(count_likes=Count('likes'))
 
 
 class LikeSpitch(APIView):
@@ -61,6 +73,11 @@ class NewSpitch(APIView):
 
 
 
+class CreateReportSpitch(generics.CreateAPIView):
+    serializer_class = ReportSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 

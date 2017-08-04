@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Spitch
+from ..models import Spitch, Report
 from apps.authentication.models import User
 from apps.ask.models import Ask
 
@@ -29,3 +29,16 @@ class SpitchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Spitch
         fields = ("id", "user", "ask", "thumb", "spitch", "spitch_transcoded", "created", "likes", "is_liked")
+
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = ("spitch", )
+
+
+class UpdateSpitchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Spitch
+        fields = ("active", )

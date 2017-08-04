@@ -42,3 +42,13 @@ class Like(models.Model):
 
     class Meta:
         unique_together = ('spitch', 'user')
+
+
+
+class Report(models.Model):
+    spitch = models.ForeignKey(Spitch, related_name="reports")
+    user = models.ForeignKey(User)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('spitch', 'user')

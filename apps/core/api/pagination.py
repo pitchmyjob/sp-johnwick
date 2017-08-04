@@ -16,8 +16,6 @@ class CustomCursorPagination(CursorPagination):
         previous_cursor = parse_qs(urlparse(previous_link).query)['cursor'][0] if previous_link else None
 
         return Response(OrderedDict([
-            ('next', next_link),
-            ('previous', previous_link),
             ('next_cursor', next_cursor),
             ('previous_cursor', previous_cursor),
             ('results', data)

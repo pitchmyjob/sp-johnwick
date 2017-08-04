@@ -73,3 +73,11 @@ class FeedListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feed
         fields = ("id", "feed_type", "content_object")
+
+
+
+class UpdateFeedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Feed
+        fields = ("id", "active", )
