@@ -51,10 +51,14 @@ class UserDatasSerializer(serializers.ModelSerializer):
 
 
 class UserAskSerializer(serializers.ModelSerializer):
+    spitchs = serializers.SerializerMethodField()
+
+    def get_spitchs(self, obj):
+        return obj.spitchs.filter(active=True).count()
 
     class Meta:
         model = Ask
-        fields = ("id", "text", "created")
+        fields = ("id", "text", "created", "spitchs")
 
 
 
