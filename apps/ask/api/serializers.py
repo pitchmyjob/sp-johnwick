@@ -37,7 +37,11 @@ class UserAskSerializer(serializers.ModelSerializer):
 
 class AskListSerializer(serializers.ModelSerializer):
     user = UserAskSerializer()
-    spitchs = serializers.IntegerField(source='spitchs.count')
+    spitchs = serializers.SerializerMethodField()
+
+    def get_spitchs(self, obj):
+        return obj.spitchs.filter(active=True).count()
+
     class Meta:
         model = Ask
         fields = ('text', 'id', 'user', 'created', 'spitchs')
