@@ -110,7 +110,7 @@ class NotificationHandler(object):
                 "text": instance.ask.text,
                 "id": instance.ask.id,
                 "spitch": instance.id,
-                "spitch_transcoded" : instance.spitch_transcoded
+                "spitch_transcoded" : instance.spitch_transcoded.url
             }
 
         return {}
