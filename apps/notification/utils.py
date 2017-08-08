@@ -109,7 +109,8 @@ class NotificationHandler(object):
             return {
                 "text": instance.ask.text,
                 "id": instance.ask.id,
-                "spitch": instance.id
+                "spitch": instance.id,
+                "spitch_transcoded" : instance.spitch_transcoded
             }
 
         return {}
