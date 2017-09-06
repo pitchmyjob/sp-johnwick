@@ -9,7 +9,7 @@ from apps.ask.models import Ask
 from apps.spitch.models import Spitch
 from apps.feed.models import Feed
 
-
+#remove when betatest is over
 @shared_task
 def new_user(user):
     user = User.objects.get(id=user)
