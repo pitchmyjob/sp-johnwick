@@ -11,6 +11,16 @@ from apps.feed.models import Feed
 
 
 @shared_task
+def new_user(user):
+    user = User.objects.get(id=user)
+    spitchs = Spitch.objects.filter(active=True).order_by('-created')[0:100]
+    Feed.objects.bulk_create(
+        [Feed(user=user, feed_type=1, content_object=spitch)
+         for spitch in reversed(spitchs)]
+    )
+
+
+@shared_task
 def follow_user(emitter, follow):
     emitter = User.objects.get(id=emitter)
     follow = User.objects.get(id=follow)

@@ -10,7 +10,7 @@ from .mixins import AuthMeMixin
 from ..models import User
 from apps.relation.models import FacebookFriend
 from apps.authentication.facebook import Facebook
-from apps.worker.tasks import sync_user
+from apps.worker.tasks import sync_user, new_user
 from apps.user.api.serializers import UserMeSerializer
 from .serializers import FacebookRegisterSerializer, AuthFCMSerializer
 
@@ -76,6 +76,7 @@ class FacebookRegisterApiView(APIView):
                 )
 
             sync_user.delay(serializer.data.get('id'), "create")
+            new_user.delay(serializer.instance.id)
 
             return Response({"token": token, "user": user.data}, status=status.HTTP_200_OK)
 
