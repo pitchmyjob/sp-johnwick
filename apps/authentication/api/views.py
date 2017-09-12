@@ -35,13 +35,14 @@ class AuthEmailUsernameCheckApiView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
+        print(request.data)
         if 'email' in request.data:
             if request.data['email']:
                 if not User.objects.filter(email=request.data['email']).exists():
                     return Response(status=status.HTTP_200_OK)
         if 'username' in request.data:
             if request.data['username']:
-                if not User.objects.filter(username=request.data['username']).exists():
+                if not User.objects.filter(username__iexact=request.data['username']).exists():
                     return Response(status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_401_UNAUTHORIZED)

@@ -55,6 +55,11 @@ class FollowAllCreateApiView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
+class UnFollowDeleteApiView(generics.DestroyAPIView):
+
+    def get_object(self):
+        return Follow.objects.filter(user_id=self.request.user.id, follow_id = self.kwargs['pk'])
+
 
 
 
