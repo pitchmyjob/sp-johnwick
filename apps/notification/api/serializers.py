@@ -6,6 +6,7 @@ class ItemNotificationSerializer(serializers.Serializer):
     user = serializers.DictField(default=None)
     obj = serializers.DictField(default=None)
     timestamp = serializers.IntegerField()
+    vue = serializers.IntegerField(default=0)
 
 class NotificationSerializer(serializers.Serializer):
     items = ItemNotificationSerializer(many=True)

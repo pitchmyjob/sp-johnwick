@@ -66,7 +66,7 @@ class NotificationHandler(object):
             'timestamp': int(time.time()),
             'fcm': self.get_fcm(receiver),
             'lang': receiver.country,
-            'view' : False
+            'vue' : 0
         }
         if type in  (2, 3, 4, 5, 6):
             item['obj'] = self.transform_instance_to_dict(self.object)

@@ -43,11 +43,15 @@ class Notification():
         key = base64.b64decode(data)
         return json.loads(key.decode())
 
+
     def run(self, id, page=None):
         self.args = self.query(id)
         if page:
             self.args['ExclusiveStartKey'] = self.decode_pagination(page)
         return self.execute()
 
+
+    def update(self, id):
+        print('ok')
 
 
