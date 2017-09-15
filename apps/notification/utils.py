@@ -65,7 +65,8 @@ class NotificationHandler(object):
             'type': type,
             'timestamp': int(time.time()),
             'fcm': self.get_fcm(receiver),
-            'lang': receiver.country
+            'lang': receiver.country,
+            'view' : False
         }
         if type in  (2, 3, 4, 5, 6):
             item['obj'] = self.transform_instance_to_dict(self.object)
