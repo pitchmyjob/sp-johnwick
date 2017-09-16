@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from apps.relation.models import Follow
 
 
 class ItemNotificationSerializer(serializers.Serializer):
@@ -7,6 +8,12 @@ class ItemNotificationSerializer(serializers.Serializer):
     obj = serializers.DictField(default=None)
     timestamp = serializers.IntegerField()
     vue = serializers.IntegerField(default=0)
+    follow = serializers.SerializerMethodField()
+
+    def get_follow(self, obj):
+        if obj['type'] == 1 :
+            return Follow.objects.filter(user_id=self.context['user'], follow_id=obj['user']['id']).exists()
+        return None
 
 class NotificationSerializer(serializers.Serializer):
     items = ItemNotificationSerializer(many=True)
