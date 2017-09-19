@@ -49,7 +49,8 @@ class LikeSpitch(APIView):
                 spitch.likes.filter(user=self.request.user).delete()
             else:
                 Like.objects.create(spitch=spitch, user=self.request.user)
-                like_spitch.delay(self.request.user.id, spitch.id)
+                if spitch.user.id != self.request.user.id:
+                    like_spitch.delay(self.request.user.id, spitch.id)
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
