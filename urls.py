@@ -2,6 +2,7 @@ import os
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
+from django.http import HttpResponse
 
 urlpatterns = [
     url(r'^api/', include([
@@ -14,6 +15,7 @@ urlpatterns = [
         url(r'^', include('apps.feed.urls')),
     ])),
     url(r'^admin/', admin.site.urls),
+    url(r"^health/", lambda r: HttpResponse())
 ]
 
 
