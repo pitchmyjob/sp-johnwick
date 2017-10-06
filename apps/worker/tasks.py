@@ -27,10 +27,14 @@ def follow_user(emitter, follow):
     NotificationHandler(emitter=emitter, type_name="follow_user", object=follow).send()
 
     spitchs = Spitch.objects.filter(user=follow, active=True).order_by('-created')[0:20]
-    Feed.objects.bulk_create(
-        [Feed(user=emitter, feed_type=1, content_object=spitch)
-         for spitch in reversed(spitchs)]
-    )
+
+    if spitchs.exists():
+        if not Feed.objects.filter(user=emitter, feed_type=1, object_id=spitchs.first().id).exists():
+            Feed.objects.bulk_create(
+                [Feed(user=emitter, feed_type=1, content_object=spitch)
+                 for spitch in reversed(spitchs)]
+        )
+
 
 @shared_task
 def follow_all(emitter):
