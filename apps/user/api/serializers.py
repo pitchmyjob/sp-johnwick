@@ -34,7 +34,7 @@ class UserDatasSerializer(serializers.ModelSerializer):
     followers = serializers.SerializerMethodField()
 
     def get_videos(self, obj):
-        return obj.spitchs.count()
+        return obj.spitchs.filter(active=True).count()
 
     def get_follows(self, obj):
         return obj.follows.count()
