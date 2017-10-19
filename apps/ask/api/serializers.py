@@ -23,7 +23,7 @@ class AskCreateSerializer(serializers.ModelSerializer):
 
         for receiver in receivers:
             if User.objects.filter(username__iexact=receiver).exists():
-                to=  User.objects.get(username__iexact=receiver)
+                to =  User.objects.get(username__iexact=receiver)
                 if to != instance.user:
                     instance.receivers.add(to)
 
