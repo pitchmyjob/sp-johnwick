@@ -22,10 +22,13 @@ class AskCreateSerializer(serializers.ModelSerializer):
             Asktag.objects.create(tag=tag, ask=instance)
 
         for receiver in receivers:
-            if User.objects.filter(username=receiver).exists():
-                instance.receivers.add(User.objects.get(username=receiver))
+            if User.objects.filter(username__iexact=receiver).exists():
+                to=  User.objects.get(username__iexact=receiver)
+                if to != instance.user:
+                    instance.receivers.add(to)
 
         ask.delay(instance.id)
+
         return instance
 
 

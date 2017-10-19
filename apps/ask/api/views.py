@@ -18,7 +18,7 @@ class AskCreateApiView(generics.CreateAPIView):
 class AskListApiView(generics.ListAPIView):
     serializer_class = AskListSerializer
     pagination_class = AskListPagination
-    queryset = Ask.objects.filter(active=True)
+    queryset = Ask.objects.filter(active=True, receivers__isnull=True)
 
     # def get_queryset(self):
     #     search = self.request.query_params.get('search', None)

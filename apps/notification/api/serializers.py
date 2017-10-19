@@ -11,7 +11,7 @@ class ItemNotificationSerializer(serializers.Serializer):
     follow = serializers.SerializerMethodField()
 
     def get_follow(self, obj):
-        if obj['type'] == 1 :
+        if obj['type'] == 1 or obj['type'] == 4 :
             return Follow.objects.filter(user_id=self.context['user'], follow_id=obj['user']['id']).exists()
         return None
 
