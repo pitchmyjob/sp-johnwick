@@ -6,6 +6,7 @@ from .models import Ask, Tag, Asktag
 class AskAdmin(admin.ModelAdmin):
     list_display = ("text", "is_private", "active")
 
+ 
 @admin.register(Asktag)
 class AsktagAdmin(admin.ModelAdmin):
     list_display = ("tag", "ask")
