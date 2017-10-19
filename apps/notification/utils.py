@@ -26,6 +26,7 @@ class NotificationHandler(object):
     def perform_ask(self):
         if self.object.is_private():
             self.receivers = self.object.receivers.all()
+            print(self.receivers)
             self.send_notifications(4)
         else:
             self.get_followers()
@@ -33,8 +34,8 @@ class NotificationHandler(object):
 
     def perform_new_spitch(self):
         if self.object.ask.is_private():
-            self.receivers = self.object.ask.receivers.all()
-            self.send_notifications(6)
+            self.receiver = self.object.user
+            self.send_notification(6)
         else:
             self.get_followers()
             self.send_notifications(5)
