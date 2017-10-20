@@ -13,7 +13,7 @@ from apps.feed.models import Feed
 @shared_task
 def new_user(user):
     user = User.objects.get(id=user)
-    spitchs = Spitch.objects.filter(active=True).order_by('-created')[0:100]
+    spitchs = Spitch.objects.filter(active=True).exclude(user__id=305).order_by('-created')[0:100]
     Feed.objects.bulk_create(
         [Feed(user=user, feed_type=1, content_object=spitch)
          for spitch in reversed(spitchs)]
