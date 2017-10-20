@@ -21,7 +21,7 @@ class Spitch(models.Model):
     ask = models.ForeignKey(Ask, related_name="spitchs")
     color = models.IntegerField(choices=COLOR_SPITCH, default=1)
 
-    video = FileField(null=True)  # video avec intro
+    video = FileField(null=True, blank=True)  # video avec intro
     spitch = FileField(null=True) # video original
     spitch_transcoded = FileField(null=True) # video original transcoder
     photo = ImageField(null=True)
