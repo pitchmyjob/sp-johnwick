@@ -2,7 +2,7 @@ import datetime
 from django.utils import timezone
 
 from rest_framework import generics
-from django.db.models import Count
+from django.db.models import Q
 
 from .serializers import *
 from .pagination import AskListPagination
@@ -18,7 +18,10 @@ class AskCreateApiView(generics.CreateAPIView):
 class AskListApiView(generics.ListAPIView):
     serializer_class = AskListSerializer
     pagination_class = AskListPagination
-    queryset = Ask.objects.filter(active=True, receivers__isnull=True)
+
+    def get_queryset(self):
+        asks = Ask.objects.filter(active=True).filter( Q(receivers__isnull=True) | Q(receivers=self.request.user))
+        return asks
 
     # def get_queryset(self):
     #     search = self.request.query_params.get('search', None)
