@@ -16,6 +16,7 @@ urlpatterns =  [
 
     url(r'^user/(?P<pk>\d+)/spitch/$', SpitchUserList.as_view(), name='spitch'),
     url(r'^user/(?P<pk>\d+)/ask/$', AskUserList.as_view(), name='ask'),
+    url(r'^user/search/$', SearchUserList.as_view(), name='search_user'),
 
     # url(r'^user/top/spitcher$', UserTopSpitcher.as_view(), name='user-top-spitcher'),
 ] + router.urls

@@ -81,3 +81,14 @@ class SpitchSerializer(serializers.ModelSerializer):
         fields = ("id", "thumb", "video", "ask", "user", "likes", "is_liked", "spitch", "spitch_transcoded")
 
 
+
+class SearchUserSerializer(serializers.ModelSerializer):
+    follow = serializers.SerializerMethodField()
+
+    def get_follow(self, obj):
+        return obj.followers.filter(user=self.context['request'].user).exists()
+
+    class Meta:
+        model = User
+        fields = ("id", "username", "first_name", "last_name", "photo", "follow")
+

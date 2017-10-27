@@ -1,14 +1,18 @@
 from rest_framework import generics, viewsets, mixins, decorators
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter, OrderingFilter
+
+from django.db.models import Count
 
 from .serializers import *
 from apps.authentication.api.mixins import AuthMeMixin
 from apps.authentication.models import User
 from apps.spitch.models import Spitch
 from apps.ask.models import Ask
+from apps.core.api.mixins import ContextMixin
 
-from .paginations import SpitchPagination
+from .paginations import SpitchPagination, SearchUserPagination
 from apps.worker.tasks import sync_user
 
 
@@ -48,6 +52,17 @@ class AskUserList(generics.ListAPIView):
         pk = self.kwargs['pk']
         return Ask.objects.filter(user=pk, active=True)
 
+
+class SearchUserList(ContextMixin, generics.ListAPIView):
+    serializer_class = SearchUserSerializer
+    pagination_class = SearchUserPagination
+    search_fields = ('username', 'first_name', 'last_name')
+    filter_backends = (SearchFilter, OrderingFilter)
+    ordering_fields = ('count_followers',)
+    ordering = ('-count_followers',)
+
+    def get_queryset(self):
+        return User.objects.annotate(count_followers=Count('followers'))
 
 
 # class UserTopSpitcher(generics.ListAPIView):
