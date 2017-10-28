@@ -21,7 +21,7 @@ class Facebook():
         obj = {
             "username": username,
             "type": "facebook",
-            "email": event['email'],
+            "email": event['email'] if 'email' in event else event['id'],
             "first_name": event['first_name'],
             "last_name": event['last_name'],
             "idsn": event['id'],

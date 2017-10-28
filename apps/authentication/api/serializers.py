@@ -16,6 +16,7 @@ from apps.worker.tasks import sync_user
 # Refactor ---------------------------------------------------------------
 
 class FacebookRegisterSerializer(serializers.ModelSerializer):
+    email = serializers.CharField()
     photo = serializers.CharField(required=False, write_only=True)
 
     class Meta:
