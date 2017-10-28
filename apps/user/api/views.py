@@ -57,7 +57,7 @@ class SearchUserList(ContextMixin, generics.ListAPIView):
     serializer_class = SearchUserSerializer
     pagination_class = SearchUserPagination
     search_fields = ('username', 'first_name', 'last_name')
-    filter_backends = (SearchFilter,)
+    filter_backends = (SearchFilter, OrderingFilter)
     ordering_fields = ('count_followers',)
     ordering = ('-count_followers',)
 
