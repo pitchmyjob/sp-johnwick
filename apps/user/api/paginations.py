@@ -7,3 +7,4 @@ class SpitchPagination(CustomCursorPagination):
 
 class SearchUserPagination(CustomCursorPagination):
     page_size = 10
+    ordering = '-date_joined'

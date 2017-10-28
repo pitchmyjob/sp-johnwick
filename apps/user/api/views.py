@@ -57,12 +57,12 @@ class SearchUserList(ContextMixin, generics.ListAPIView):
     serializer_class = SearchUserSerializer
     pagination_class = SearchUserPagination
     search_fields = ('username', 'first_name', 'last_name')
-    filter_backends = (SearchFilter, OrderingFilter)
+    filter_backends = (SearchFilter,)
     ordering_fields = ('count_followers',)
     ordering = ('-count_followers',)
 
     def get_queryset(self):
-        return User.objects.annotate(count_followers=Count('followers'))
+        return User.objects.filter(is_active=True, is_staff=False).annotate(count_followers=Count('followers'))
 
 
 # class UserTopSpitcher(generics.ListAPIView):
