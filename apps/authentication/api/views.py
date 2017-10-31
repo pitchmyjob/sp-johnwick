@@ -1,5 +1,3 @@
-import boto3
-
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
@@ -56,7 +54,7 @@ class FacebookRegisterApiView(APIView):
         if "token" in request.data and "username" in request.data:
             facebook = Facebook(request.data['token'])
 
-            User.objects.filter(idsn=facebook.get_id()).delete()
+            # User.objects.filter(idsn=facebook.get_id()).delete()
 
             serializer = FacebookRegisterSerializer(data=facebook.get_profile(request.data['username']))
             serializer.is_valid(raise_exception=True)
