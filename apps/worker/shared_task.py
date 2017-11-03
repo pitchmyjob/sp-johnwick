@@ -41,3 +41,55 @@ class shared_task(object):
 # 	"args": [],
 # 	"path": "apps.worker.tasks"
 # }
+
+
+# Free notification structure example
+# {
+#   "fcm": {
+#     "S": "fcmstring"
+#   },
+#   "body": {
+#     "S": "body"
+#   },
+#   "title": {
+#     "S": "title"
+#   },
+#   "type": {
+#     "N": "0"
+#   },
+#   "obj": {
+#     "M": {
+#       "id": {
+#         "N": "152"
+#       },
+#       "spitch": {
+#         "N": "1069"
+#       },
+#       "spitch_transcoded": {
+#         "S": "https://spitchdev-bucket-uwfmzpv98dvk.s3.amazonaws.com/media/287/spitch/1069/05ff7f03928249c6b2df.mp4"
+#       },
+#       "text": {
+#         "S": "Avez vous deja vu une grosse araignée ?"
+#       }
+#     }
+#   },
+#   "user": {
+#     "M": {
+#       "first_name": {
+#         "S": "Antoine"
+#       },
+#       "id": {
+#         "N": "287"
+#       },
+#       "last_name": {
+#         "S": "Boudic"
+#       },
+#       "photo": {
+#         "S": "https://spitchdev-bucket-uwfmzpv98dvk.s3.amazonaws.com/media/287/photo/e5dc8d46aacf43d08c3c.jpg"
+#       },
+#       "username": {
+#         "S": "AntoineBoudic"
+#       }
+#     }
+#   }
+# }

@@ -23,6 +23,8 @@ class User(AbstractUser):
     lang = models.CharField(default="fr", max_length=10)
     country = models.CharField(default="FR", max_length=10)
 
+    welcome = models.BooleanField(default=True)
+
 
     class Meta:
         verbose_name = _('user')
