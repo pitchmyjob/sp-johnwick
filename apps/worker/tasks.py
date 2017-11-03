@@ -1,5 +1,6 @@
 import boto3
 import uuid
+from django.conf import settings
 from .shared_task import shared_task
 from apps.core.sync import SyncAsk, SyncUser
 from apps.notification.utils import NotificationHandler
@@ -128,3 +129,5 @@ def new_spitch(spitch):
     # ----------------------------------------
 
     NotificationHandler(emitter=spitch.user, type_name="new_spitch", object=spitch).send()
+
+

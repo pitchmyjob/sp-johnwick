@@ -87,6 +87,7 @@ class FacebookRegisterApiView(APIView):
 class AuthFCMTokenApiView(AuthMeMixin, generics.UpdateAPIView):
     serializer_class = AuthFCMSerializer
 
+
 # Refactor ---------------------------------------------------------------
 # Refactor ---------------------------------------------------------------
 
