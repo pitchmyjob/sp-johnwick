@@ -76,7 +76,7 @@ class FacebookRegisterApiView(APIView):
             sync_user.delay(serializer.data.get('id'), "create")
 
             #remove when betatest is over
-            new_user.delay(serializer.instance.id)
+            # new_user.delay(serializer.instance.id)
 
             return Response({"token": token, "user": user.data}, status=status.HTTP_200_OK)
 
