@@ -27,7 +27,7 @@ class AskCreateSerializer(serializers.ModelSerializer):
                 if to != instance.user:
                     instance.receivers.add(to)
 
-        ask.delay(instance.id)
+        #ask.delay(instance.id)
 
         return instance
 
